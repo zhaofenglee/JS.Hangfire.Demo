@@ -38,6 +38,7 @@ using Volo.Abp.VirtualFileSystem;
 using Volo.Saas.Host;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
@@ -51,10 +52,13 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonX;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonX.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.Toolbars;
 using Volo.Abp.AspNetCore.Serilog;
+using Volo.Abp.BackgroundJobs.Hangfire;
+using Volo.Abp.BackgroundWorkers.Hangfire;
 using Volo.Abp.Identity;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.Gdpr.Web;
 using Volo.Abp.Gdpr.Web.Extensions;
+using Volo.Abp.Hangfire;
 using Volo.Abp.LeptonX.Shared;
 using Volo.Abp.OpenIddict;
 using Volo.Abp.OpenIddict.Pro.Web;
@@ -78,7 +82,8 @@ namespace JS.Hangfire.Demo.Web;
     typeof(TextTemplateManagementWebModule),
     typeof(AbpGdprWebModule),
     typeof(AbpSwashbuckleModule),
-    typeof(AbpAspNetCoreSerilogModule)
+    typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpBackgroundWorkersHangfireModule) //Add the new module dependency
 )]
 public class DemoWebModule : AbpModule
 {
@@ -162,6 +167,8 @@ public class DemoWebModule : AbpModule
         {
             options.IsDynamicPermissionStoreEnabled = true;
         });
+        
+        ConfigureHangfire(context, configuration);
     }
 
     private void ConfigureCookieConsent(ServiceConfigurationContext context)
@@ -351,7 +358,17 @@ public class DemoWebModule : AbpModule
         return new X509Certificate2(file, passPhrase);
     }
 
-
+    private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        context.Services.AddHangfire(config =>
+        {
+            config.UseSqlServerStorage(configuration.GetConnectionString("Default"));
+        });
+        Configure<AbpHangfireOptions>(options =>
+        {
+            options.ServerOptions = new BackgroundJobServerOptions {Queues = new[] {"alpha", "beta", "default","samples"}};
+        });
+    }
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
@@ -392,6 +409,7 @@ public class DemoWebModule : AbpModule
         });
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
+        app.UseHangfireDashboard(); //should add to the request pipeline before the app.UseConfiguredEndpoints()
         app.UseConfiguredEndpoints();
     }
 }

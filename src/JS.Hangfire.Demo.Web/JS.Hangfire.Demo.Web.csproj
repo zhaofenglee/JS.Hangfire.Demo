@@ -35,6 +35,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="7.0.0-rc2.6" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.0.0-rc2.6" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="7.0.0-rc2.6" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.8.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.0" />
@@ -49,6 +50,7 @@
     <PackageReference Include="Volo.Abp.Autofac" Version="7.3.3" />
     <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="7.3.3" />
     <PackageReference Include="Volo.Abp.AspNetCore.Authentication.JwtBearer" Version="7.3.3" />
+    <PackageReference Include="Volo.Abp.BackgroundWorkers.Hangfire" Version="7.3.3" />
     <PackageReference Include="Volo.Abp.Swashbuckle" Version="7.3.3" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Web" Version="7.3.3" />
     <PackageReference Include="Volo.Abp.Account.Pro.Public.Web.OpenIddict" Version="7.3.3" />
@@ -65,5 +67,6 @@
   <ItemGroup>
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonX" Version="2.3.*-*" />
   </ItemGroup>
+
 
 </Project>

@@ -21,6 +21,7 @@ using Volo.Abp.Commercial.SuiteTemplates;
 using Volo.Abp.Gdpr;
 using Volo.Abp.OpenIddict;
 using Volo.Abp.PermissionManagement.OpenIddict;
+using Volo.Abp.BackgroundJobs.Hangfire;
 
 namespace JS.Hangfire.Demo;
 
@@ -43,7 +44,8 @@ namespace JS.Hangfire.Demo;
     typeof(AbpGdprDomainModule),
     typeof(BlobStoringDatabaseDomainModule)
     )]
-public class DemoDomainModule : AbpModule
+[DependsOn(typeof(AbpBackgroundJobsHangfireModule))]
+    public class DemoDomainModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
